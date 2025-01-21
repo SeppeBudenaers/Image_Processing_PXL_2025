@@ -17,6 +17,7 @@ Higher bit depths allow for smoother gradients and more accurate color represent
 
 ### Gamma
 ```Gamma correction adjusts the brightness of an image by transforming pixel intensity values. It is commonly used to ensure consistent brightness across different devices and to account for non-linear human perception of light.```
+
 > this needs to change
 
 ### Color Models
@@ -27,25 +28,46 @@ Higher bit depths allow for smoother gradients and more accurate color represent
 
 ### Rubik's Cube Solver
 ```In applications like a Rubik's Cube solver, color spaces play a critical role. The RGB model is sensitive to brightness changes; altering the brightness of a scene directly impacts color values. However, color spaces that separate brightness from color, such as HSV (Hue, Saturation, Value), isolate brightness adjustments without affecting color values, enabling more consistent color detection.```
+
 > this needs to change
 
 # Hoofdstuk 2
 
-## Global and Point Filters
+## Global, Point and local Filters
 
-Point filters apply operations to individual pixels (can still take a grid in for example convolutions), while global filters consider the entire image. These methods enhance image quality or extract specific features.
+- **Global Filter:** Global filters process the entire image to generate a new image. The output at any pixel depends on the information from the entire image. 
+  `Example: Histogram equalization.`  
+
+- **Point Filter:** Point filters process each pixel individually. The output pixel is calculated based solely on the value of the corresponding input pixel at the same location.
+  `Example: Brightness adjustment by adding a constant to all pixel values.`
+
+- **Local Filter:** Local filters consider a specific neighborhood (a grid) around a pixel and calculate the output pixel based on the values within that grid. The result is assigned to the center pixel.  
+  `Example: convolution or Smoothing filters like the Gaussian blur or sharpening filters.`
 
 ## Distance in an Image
 - **Euclidean Distance:** Straight-line distance between two points.  
 - **City Block Distance:** Distance measured along axes at right angles (Manhattan distance).  
 - **Chessboard Distance:** Maximum distance along any dimension.
 
-## Histogram
-A histogram plots the frequency of each intensity value in an image, providing a visual representation of tonal distribution.
+## Histogram  
+A histogram plots the frequency of each intensity value in an image, providing a visual representation of the tonal distribution. It helps analyze the brightness and contrast of an image by showing how pixel intensities are distributed.  
 
-#### Histogram Equalization
-A technique to improve image contrast by spreading intensity values more uniformly across the range.
-> needs to be more explained
+#### Histogram Equalization  
+Histogram equalization is a technique to improve image contrast by spreading intensity values more uniformly across the available range. The basic function is:  
+
+![image-20250121115548527](Images/README/image-20250121115548527.png)  
+
+- **I:** Original intensity  
+- **S:** New intensity  
+- **L:** Maximum intensity level  
+
+The most common transfer function used is the **Cumulative Distribution Function (CDF)**:  
+
+![image-20250121115524126](Images/README/image-20250121115524126.png)  
+
+This ensures the histogram is redistributed to improve the contrast, resulting in a more balanced image appearance.
+
+
 
 ## Smoothing & Sharpening Filters
 
@@ -69,19 +91,32 @@ When applying filters, borders need special handling:
 
 # Hoofdstuk 3
 
-## 2D fourfier transform
-explain how it works
-> check uitleg van laplacian
+## 2D Fourier Transform  
+The 2D Fourier Transform is a mathematical technique that converts an image from the spatial domain (where pixel intensities represent the image) into the frequency domain (where values represent the amplitude and phase of different frequency components). It is widely used in image processing for filtering, analysis, and compression.  
 
-### Axes in the Frequency Domain
-- **X-axis (Horizontal Frequencies):** Represents the variation of intensity along the horizontal direction in the image.  
-- **Y-axis (Vertical Frequencies):** Represents the variation of intensity along the vertical direction in the image. 
+### How It Works  
+The transform decomposes the image into a sum of sinusoidal functions with varying frequencies. The output frequency domain representation provides:  
+- **Low frequencies:** Representing smooth variations and overall structure of the image.  
+- **High frequencies:** Representing fine details, edges, and noise.  
 
-## Low pas filters (smooth filters)
->explain give maybe names
+### Axes in the Frequency Domain  
+- **X-axis (Horizontal Frequencies):** Represents intensity variations along the horizontal direction in the image.  
+- **Y-axis (Vertical Frequencies):** Represents intensity variations along the vertical direction in the image.  
 
-## High pas filters (edge detection)
->explain give maybe names
+## Low-Pass Filters (Smooth Filters)  
+Low-pass filters are used to remove high-frequency components (e.g., noise and edges), resulting in a smoother image.  
+
+- **Ideal Low-Pass Filter:** A sharp cutoff filter that allows all frequencies below a certain threshold to pass and blocks others completely.  
+- **Butterworth Low-Pass Filter:** A smoother transition between passed and blocked frequencies, controlled by its order.  
+- **Gaussian Low-Pass Filter:** Applies a Gaussian function to frequencies, providing smooth attenuation of higher frequencies.  
+
+## High-Pass Filters (Edge Detection)  
+High-pass filters are used to remove low-frequency components, enhancing edges and fine details in the image.  
+
+- **Ideal High-Pass Filter:** Blocks all frequencies below a threshold and allows higher frequencies to pass.  
+- **Butterworth High-Pass Filter:** Provides a gradual transition between blocked and passed frequencies, depending on its order.  
+- **Gaussian High-Pass Filter:** Smoothly attenuates low frequencies using a Gaussian function.  
+- **Laplacian Filter:** Detects edges by computing the second derivative of the image, highlighting areas of rapid intensity change.
 
 ## Bandreject Filter
 A bandreject filter blocks a specific range of frequencies, leaving the remaining frequencies intact. It is commonly used to remove specific patterns or interference in an image.
@@ -108,31 +143,11 @@ Compression is a technique used to reduce the size of large data packets through
 ## JPEG compressie 
 
 ![image-20250120172833946](Images/README/image-20250120172833946.png)
+JPEG compression uses several steps to reduce image size while maintaining visual quality:
 
-- **Switching Color Space**  
-  The image is converted from the RGB color space to the YCbCr color space.  
-  - Y (luminance) contains brightness information.  
-  - Cb and Cr (chrominance) contain color information.  
-  This separation allows for better compression as the human eye is less sensitive to color variations than brightness.
-
-- **Blocks**  
-  The image is divided into small blocks, typically 8x8 pixels.  
-  - Each block is processed individually, making the compression manageable and efficient.  
-
-- **Discrete Cosine Transform (DCT)**  
-  Converts the pixel values in each block into frequency components.  
-  - Lower frequencies represent important image details.  
-  - Higher frequencies represent finer details, which can be compressed more aggressively.
-
-- **Quantization via Quantization Tables**  
-  The frequency components are scaled down using a quantization table.  
-  - Larger reductions are applied to higher frequencies, as they are less noticeable to the human eye.  
-  - This step introduces most of the data loss in JPEG compression.
-
-- **Zig-Zag (Run Length Encoding)**  
-  After quantization, the coefficients are read in a zig-zag order to group zeros together.  
-  - This optimizes the data for further compression by clustering similar values.
-
-- **Huffman Encoding**  
-  The remaining values are encoded using Huffman coding, a lossless compression method.  
-  - Frequently occurring values are given shorter codes, reducing the overall file size.
+1. **Switching Color Space:** Converts the image from RGB to a color space like YCbCr to separate brightness (Y) from color information (Cb and Cr).
+2. **Blocks:** Divides the image into small blocks (e.g., 8x8 pixels) for localized processing.
+3. **Discrete Cosine Transform (DCT):** Transforms the pixel values into frequency components, emphasizing low frequencies and minimizing high frequencies.
+4. **Quantization via Quantization Tables:** Reduces precision of high-frequency components using predefined quantization tables, achieving significant compression.
+5. **Zig-Zag (Run-Length Encoding):** Arranges frequency components in a zig-zag order to group similar values, enabling efficient run-length encoding.
+6. **Huffman Encoding:** Applies entropy-based encoding to further compress the data by reducing redundancy.
