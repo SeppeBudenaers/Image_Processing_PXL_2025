@@ -96,8 +96,11 @@ The 2D Fourier Transform is a mathematical technique that converts an image from
 
 ### How It Works  
 The transform decomposes the image into a sum of sinusoidal functions with varying frequencies. The output frequency domain representation provides:  
-- **Low frequencies:** Representing smooth variations and overall structure of the image.  
-- **High frequencies:** Representing fine details, edges, and noise.  
+
+![image-20250122094339865](Images/README/image-20250122094339865.png)
+
+- **Low frequencies:** Represent smooth variations and the overall structure of the image, located at the center.  
+- **High frequencies:** Represent fine details, edges, and noise, located around the center.  
 
 ### Axes in the Frequency Domain  
 - **X-axis (Horizontal Frequencies):** Represents intensity variations along the horizontal direction in the image.  
@@ -108,15 +111,20 @@ Low-pass filters are used to remove high-frequency components (e.g., noise and e
 
 - **Ideal Low-Pass Filter:** A sharp cutoff filter that allows all frequencies below a certain threshold to pass and blocks others completely.  
 - **Butterworth Low-Pass Filter:** A smoother transition between passed and blocked frequencies, controlled by its order.  
-- **Gaussian Low-Pass Filter:** Applies a Gaussian function to frequencies, providing smooth attenuation of higher frequencies.  
+- **Gaussian Low-Pass Filter:** Applies a Gaussian function to frequencies, providing smooth attenuation of higher frequencies.  ![image-20250122094737399](Images/README/image-20250122094737399.png)
 
 ## High-Pass Filters (Edge Detection)  
 High-pass filters are used to remove low-frequency components, enhancing edges and fine details in the image.  
 
 - **Ideal High-Pass Filter:** Blocks all frequencies below a threshold and allows higher frequencies to pass.  
+
 - **Butterworth High-Pass Filter:** Provides a gradual transition between blocked and passed frequencies, depending on its order.  
+
 - **Gaussian High-Pass Filter:** Smoothly attenuates low frequencies using a Gaussian function.  
+
 - **Laplacian Filter:** Detects edges by computing the second derivative of the image, highlighting areas of rapid intensity change.
+
+  ![image-20250122094832306](Images/README/image-20250122094832306.png)
 
 ## Bandreject Filter
 A bandreject filter blocks a specific range of frequencies, leaving the remaining frequencies intact. It is commonly used to remove specific patterns or interference in an image.
